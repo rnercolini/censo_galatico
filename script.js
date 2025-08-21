@@ -50,7 +50,7 @@ async function exibeBusca(planeta_busca = buscaPlaneta[0].value){
   let requisicao_input = await fetch(apiURL);
   let arquivo_input = await requisicao_input.json();
   arquivo_input.results.forEach(planetaInput => {
-    if ((planetaInput.name).toLowerCase().includes() == (planeta_busca).toLowerCase().includes()) {
+    if (planetaInput.name.toLowerCase().includes(planeta_busca.toLowerCase())) {
       let lista_detalhes = document.createElement('li');
       lista_detalhes.innerHTML = `<h2>Planet:    ${planetaInput.name}</h2>
                                   <p>Climate:    ${planetaInput.climate}</p>
