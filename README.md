@@ -21,3 +21,6 @@
 | Fonte de dados      | SWAPI (https://swapi.dev/)                |
 
 ---
+
+##  Link para o site
+https://rnercolini.github.io/censo_galatico/
