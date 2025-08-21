@@ -1,7 +1,4 @@
-// script.js
-
-const API_URL = 'https://swapi.co/api/';
-
+const API_URL = 'https://swapi.dev/api/'; // URL corrigida
 // referências aos elementos do DOM
 const planetasList      = document.getElementById('planetas');
 const dadosList         = document.getElementById('dados');
@@ -14,9 +11,8 @@ const buscaPlanetaInput = document.getElementById('busca_planeta');
 async function exibePlanetas() {
   planetasList.innerHTML = '';
   try {
-    const res       = await fetch('${API_URL}planets/');
+    const res       = await fetch(`${API_URL}planets/`); // Template literal corrigido
     const { results } = await res.json();
-
     results.forEach(planeta => {
       const li = document.createElement('li');
       li.innerHTML = `
@@ -36,25 +32,24 @@ async function exibePlanetas() {
 async function exibeDetalhes(nome_planeta) {
   dadosList.innerHTML      = '';
   habitantesList.innerHTML = '';
-
   try {
     const res        = await fetch(
       `${API_URL}planets/?search=${encodeURIComponent(nome_planeta)}`
     );
     const { results } = await res.json();
     const planeta     = results.find(p => p.name === nome_planeta);
-
+    
     if (!planeta) return;
-
+    
     // Detalhes principais do planeta
     const liDetalhes = document.createElement('li');
     liDetalhes.innerHTML = `
       <h3>Planet: ${planeta.name}</h3>
       <p>Climate: ${planeta.climate}</p>
-      <p>Population: ${Number(planeta.population).toLocaleString('pt-BR')}</p>
+      <p>Population: ${isNaN(planeta.population) ? planeta.population : Number(planeta.population).toLocaleString('pt-BR')}</p>
       <p>Terrain: ${planeta.terrain}</p>`;
     dadosList.appendChild(liDetalhes);
-
+    
     // Listagem de moradores
     for (const url of planeta.residents) {
       const r     = await fetch(url);
@@ -74,42 +69,48 @@ async function exibeDetalhes(nome_planeta) {
 async function exibeBusca() {
   const termo = buscaPlanetaInput.value.trim();
   if (!termo) return;
-
+  
   dadosList.innerHTML      = '';
   habitantesList.innerHTML = '';
   planetasList.innerHTML   = '';
-
+  
   try {
     const res        = await fetch(
       `${API_URL}planets/?search=${encodeURIComponent(termo)}`
     );
     const { results } = await res.json();
-
+    
     if (results.length === 0) {
       dadosList.innerHTML = '<li>Planeta não encontrado.</li>';
       return;
     }
-
-    results.forEach(planeta => {
+    
+    // Processar cada planeta encontrado
+    for (const planeta of results) {
       const li = document.createElement('li');
       li.innerHTML = `
         <h2>Planet: ${planeta.name}</h2>
         <p>Climate: ${planeta.climate}</p>
-        <p>Population: ${Number(planeta.population).toLocaleString('pt-BR')}</p>
+        <p>Population: ${isNaN(planeta.population) ? planeta.population : Number(planeta.population).toLocaleString('pt-BR')}</p>
         <p>Terrain: ${planeta.terrain}</p>`;
       dadosList.appendChild(li);
-
-      planeta.residents.forEach(async url => {
-        const r     = await fetch(url);
-        const resJ  = await r.json();
-        const liRes = document.createElement('li');
-        liRes.innerHTML = `<p>${resJ.name} | Birthdate: ${resJ.birth_year}</p>`;
-        habitantesList.appendChild(liRes);
-      });
-    });
+      
+      // Processar habitantes de forma sequencial (melhor performance)
+      for (const url of planeta.residents) {
+        try {
+          const r     = await fetch(url);
+          const resJ  = await r.json();
+          const liRes = document.createElement('li');
+          liRes.innerHTML = `<p>${resJ.name} | Birthdate: ${resJ.birth_year}</p>`;
+          habitantesList.appendChild(liRes);
+        } catch (resErr) {
+          console.error('Erro ao buscar habitante:', resErr);
+        }
+      }
+    }
   } catch (err) {
     console.error('Erro na busca por planeta:', err);
   }
-
+  
   buscaPlanetaInput.value = '';
 }
