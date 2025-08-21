@@ -22,5 +22,37 @@
 
 ---
 
-##  Link para o site
-https://rnercolini.github.io/censo_galatico/
+##  Como Usar
+
+- Segue o link para o site: https://rnercolini.github.io/censo_galatico/
+
+##  Se preferir...
+
+Clone este repositório:
+- bashgit clone https://github.com/rnercolini/censo_galatico.git
+
+Acesse a pasta do projeto:
+- bashcd censo_galatico
+
+Abra o arquivo index.html no navegador de sua preferência. A aplicação está pronta para uso — sem backend ou instalação adicional!
+
+---
+
+##  Próximos Passos (Ideias de Evoluções)
+
+- Adotar async/await para requisições mais limpas e legibilidade aprimorada.
+- Implementar filtros, busca por nome ou paginação para facilitar a navegação dos dados.
+- Adicionar componentes RN (React.js, Vue.js ou Svelte) para modularizar e modernizar a interface.
+- Criar cache local (por exemplo, via localStorage) para reduzir chamadas à API.
+
+---
+
+## Créditos
+Desenvolvido por Rodrigo Nercolini durante o curso na Campus Code.
+
+---
+
+##  Contato
+Para sugestões de melhorias, pull requests ou dúvidas, abra uma issue ou entre em contato via LinkedIn.
+
+
