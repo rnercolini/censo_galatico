@@ -1,89 +1,103 @@
+// referências aos elementos do DOM
+const planetasList     = document.getElementById('planetas');
+const dadosList        = document.getElementById('dados');
+const habitantesList   = document.getElementById('habitantes');
+const buscaPlanetaInput= document.getElementById('busca_planeta');
 
+// 1) lista inicial de planetas
+async function exibePlanetas() {
+  planetasList.innerHTML = '';
+  try {
+    const res       = await fetch('https://swapi.dev/api/planets/');
+    const { results } = await res.json();
 
-async function exibePlanetas(){
-  let planetas = document.getElementById('planetas');
-  document.getElementById('planetas').innerHTML = '';
-  let requisicao = await fetch('https://swapi.dev/api/planets/');
-  let {results} = await requisicao.json();
-  results.forEach(planeta => {
-    let lista = document.createElement('li');
-    lista.innerHTML = `<button onclick="exibeDetalhes('${planeta.name}')">${planeta.name}</button>`;
-    planetas.appendChild(lista);
-  });
-}
-
-let dados = document.getElementById('dados');
-
-async function exibeDetalhes(nome_planeta){
-  document.getElementById('dados').innerHTML = '';
-  document.getElementById('habitantes').innerHTML = '';
-  let apiURL = 'https://swapi.dev/api/planets/?search=' + nome_planeta;
-  let requisicao_detalhes = await fetch(apiURL);
-  let arquivo_detalhes = await requisicao_detalhes.json();
-  arquivo_detalhes.results.forEach(planetaDetalhes => {
-    if (planetaDetalhes.name == nome_planeta) {
-      let lista_detalhes = document.createElement('li');
-      lista_detalhes.innerHTML = `<h3>Planet:    ${planetaDetalhes.name}</h3>
-                                  <p>Climate:    ${planetaDetalhes.climate}</p>
-                                  <p>Population: ${(+planetaDetalhes.population).toLocaleString('pt-BR')}</p>
-                                  <p>Terrain:    ${planetaDetalhes.terrain}</p>`;
-      dados.appendChild(lista_detalhes);
-
-  planetaDetalhes.residents.forEach(async residentes => {
-    let lista_residentes = document.createElement('li');
-    let busca_residente = await fetch(`${residentes}?format=json`);
-    let residente_json = await busca_residente.json();
-    lista_residentes.innerHTML = `<p>${residente_json.name} | Birthdate: ${residente_json.birth_year}</p>`;
-    habitantes.appendChild(lista_residentes);
-  });
-    }
-  });
-}
-
-
-let buscaPlaneta = document.getElementsByName('busca_planeta');
-
-async function exibeBusca(planeta_busca = buscaPlaneta[0].value){
-  document.getElementById('dados').innerHTML = '';
-  document.getElementById('habitantes').innerHTML = '';
-  let apiURL = 'https://swapi.dev/api/planets/?search=' + planeta_busca;
-  let requisicao_input = await fetch(apiURL);
-  let arquivo_input = await requisicao_input.json();
-  arquivo_input.results.forEach(planetaInput => {
-    if (planetaInput.name.toLowerCase().includes(planeta_busca.toLowerCase())) {
-      let lista_detalhes = document.createElement('li');
-      lista_detalhes.innerHTML = `<h2>Planet:    ${planetaInput.name}</h2>
-                                  <p>Climate:    ${planetaInput.climate}</p>
-                                  <p>Population: ${(+planetaInput.population).toLocaleString('pt-BR')}</p>
-                                  <p>Terreno:    ${planetaInput.terrain}</p>`;
-                                  
-      dados.appendChild(lista_detalhes);    
-         
-      planetaInput.residents.forEach(async residentes => {
-      let lista_residentes = document.createElement('li');
-      let busca_residente = await fetch(`${residentes}?format=json`);
-      let residente_json = await busca_residente.json();
-      lista_residentes.innerHTML = `<p>${residente_json.name} | Birthdate: ${residente_json.birth_year}</p>`;
-      console.log(residente_json);
-      habitantes.appendChild(lista_residentes);
+    results.forEach(planeta => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <button onclick="exibeDetalhes('${planeta.name}')">
+          ${planeta.name}
+        </button>`;
+      planetasList.appendChild(li);
     });
-   }
-  });
-  buscaPlaneta[0].value = '';
+  } catch (err) {
+    console.error('Erro ao carregar planetas:', err);
+  }
 }
 
+// 2) detalha clima, população, terreno e habitantes de um planeta
+async function exibeDetalhes(nome_planeta) {
+  dadosList.innerHTML      = '';
+  habitantesList.innerHTML = '';
 
+  try {
+    const res        = await fetch(
+      `https://swapi.dev/api/planets/?search=${encodeURIComponent(nome_planeta)}`
+    );
+    const { results } = await res.json();
+    const planeta     = results.find(p => p.name === nome_planeta);
+    if (!planeta) return;
 
+    // detalhes principais
+    const liDetalhes = document.createElement('li');
+    liDetalhes.innerHTML = `
+      <h3>Planet: ${planeta.name}</h3>
+      <p>Climate: ${planeta.climate}</p>
+      <p>Population: ${Number(planeta.population).toLocaleString('pt-BR')}</p>
+      <p>Terrain: ${planeta.terrain}</p>`;
+    dadosList.appendChild(liDetalhes);
 
+    // moradores
+    for (const url of planeta.residents) {
+      const r     = await fetch(`${url}?format=json`);
+      const resJ  = await r.json();
+      const liRes = document.createElement('li');
+      liRes.innerHTML = `<p>${resJ.name} | Birthdate: ${resJ.birth_year}</p>`;
+      habitantesList.appendChild(liRes);
+    }
+  } catch (err) {
+    console.error('Erro ao buscar detalhes:', err);
+  }
+}
 
-// https://swapi.dev/api/planets/?search=planetName
+// 3) busca por termo digitado
+async function exibeBusca() {
+  const termo = buscaPlanetaInput.value.trim();
+  if (!termo) return;
 
-// let response = await fetch(`https://swapi.dev/api/people/?page=${page}`);
+  dadosList.innerHTML      = '';
+  habitantesList.innerHTML = '';
 
-// function prevPage() {
-//   loadPersonas(page - 1);
-// }
+  try {
+    const res        = await fetch(
+      `https://swapi.dev/api/planets/?search=${encodeURIComponent(termo)}`
+    );
+    const { results } = await res.json();
 
-// function nextPage() {
-//   loadPersonas(page + 1);
-// }
+    results.forEach(planeta => {
+      if (planeta.name.toLowerCase().includes(termo.toLowerCase())) {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <h2>Planet: ${planeta.name}</h2>
+          <p>Climate: ${planeta.climate}</p>
+          <p>Population: ${Number(planeta.population).toLocaleString('pt-BR')}</p>
+          <p>Terrain: ${planeta.terrain}</p>`;
+        dadosList.appendChild(li);
+
+        planeta.residents.forEach(async url => {
+          const r     = await fetch(`${url}?format=json`);
+          const resJ  = await r.json();
+          const liRes = document.createElement('li');
+          liRes.innerHTML = `<p>${resJ.name} | Birthdate: ${resJ.birth_year}</p>`;
+          habitantesList.appendChild(liRes);
+        });
+      }
+    });
+  } catch (err) {
+    console.error('Erro na busca por planeta:', err);
+  }
+
+  buscaPlanetaInput.value = '';
+}
+
+// dispara listagem inicial
+window.onload = exibePlanetas;
