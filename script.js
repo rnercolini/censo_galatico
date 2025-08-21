@@ -14,7 +14,7 @@ const buscaPlanetaInput = document.getElementById('busca_planeta');
 async function exibePlanetas() {
   planetasList.innerHTML = '';
   try {
-    const res       = await fetch(`${API_URL}planets/`);
+    const res       = await fetch('${API_URL}planets/');
     const { results } = await res.json();
 
     results.forEach(planeta => {
