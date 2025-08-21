@@ -26,7 +26,7 @@
 
 - Segue o link para o site: https://rnercolini.github.io/censo_galatico/
 
-##  Se preferir...
+#  Se preferir...
 
 Clone este repositório:
 - bashgit clone https://github.com/rnercolini/censo_galatico.git
