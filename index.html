@@ -1,53 +1,62 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Projeto Censo Galático</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Projeto Censo Galáctico</title>
 </head>
 <body onload="exibePlanetas()">
 
-  <div class="header">
+  <header class="header">
     <div id="logo">
       <a href="index.html">
-        <img src="logo_star.png" alt="Logo Star Wars" width="60%">
+        <img src="logo_star.png" alt="Logo Star Wars" width="60%" />
       </a>
     </div>
     <div id="titulo">
       <h1>CENSO GALÁTICO</h1>
-      <p>Dados do último censo da República Galática</p>
+      <p>Dados do último censo da República Galáctica</p>
     </div>
     <div id="logo2">
-      <img src="rebeldes.png" alt="Logo Rebeldes" width="30%">
+      <img src="rebeldes.png" alt="Logo Rebeldes" width="30%" />
     </div>
-  </div>
+  </header>
 
-  <div class="container">
-    <div class="col_planetas">
-      <input id="busca_planeta" name="busca_planeta" type="text" placeholder="Busque um planeta">
+  <main class="container">
+    <section class="col_planetas">
+      <input
+        id="busca_planeta"
+        type="text"
+        placeholder="Busque um planeta"
+      />
       <button onclick="exibeBusca()">Pesquisar</button>
       <ul id="planetas"></ul>
-    </div>
-    
-    <div class="col_info">
-      <h2>Informações</h2> 
-      <ul id="dados"></ul>
-    </div>
+    </section>
 
-    <div class="col_hab">
-      <h2>Habitantes Mais Famosos</h2> 
+    <section class="col_info">
+      <h2>Informações</h2>
+      <ul id="dados"></ul>
+    </section>
+
+    <section class="col_hab">
+      <h2>Habitantes Mais Famosos</h2>
       <ul id="habitantes"></ul>
-    </div>
-  </div>
-  
-    <footer>
-      <h4>Contato</h4>
-      <a href="mailto:rnerco@gmail.com">rnerco@gmail.com</a></br>
-      <a href="https://www.linkedin.com/in/rodrigo-nercolini-480630221/" target="_blank">Linkedin</a></br>
-      <a href="https://github.com/rnercolini" target="_blank">Github</a>
-    </footer>
+    </section>
+  </main>
+
+  <footer>
+    <h4>Contato</h4>
+    <a href="mailto:rnerco@gmail.com">rnerco@gmail.com</a><br />
+    <a
+      href="https://www.linkedin.com/in/rodrigo-nercolini-480630221/"
+      target="_blank"
+      >LinkedIn</a
+    ><br />
+    <a href="https://github.com/rnercolini" target="_blank">GitHub</a>
+  </footer>
 
   <script src="script.js"></script>
 </body>
