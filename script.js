@@ -1,6 +1,6 @@
 // script.js
 
-const API_URL = 'https://swapi.dev/api/';
+const API_URL = 'http://swapi.dev/api/';
 
 // referências aos elementos do DOM
 const planetasList      = document.getElementById('planetas');
