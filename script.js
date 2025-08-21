@@ -1,4 +1,5 @@
-const API_URL = 'https://swapi.dev/api/'; // URL corrigida
+// script.js
+const API_URL = 'https://swapi.py4e.com/api/'; // URL alternativa que funciona
 // referências aos elementos do DOM
 const planetasList      = document.getElementById('planetas');
 const dadosList         = document.getElementById('dados');
